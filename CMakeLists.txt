@@ -31,6 +31,6 @@ include_directories(${SDL2_image_INCLUDE_DIRS})
 
 find_package(fmt REQUIRED)
 
-add_executable(netra src/main.cpp src/events.cpp src/timer.cpp src/objects.cpp)
+add_executable(netra src/main.cpp src/events.cpp src/timer.cpp src/objects.cpp src/ringbuffer.cpp)
 target_include_directories(netra PRIVATE include/)
 target_link_libraries(netra SDL2 SDL2_image fmt::fmt)

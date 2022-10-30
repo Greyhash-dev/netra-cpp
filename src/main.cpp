@@ -7,6 +7,7 @@
 #include "events.h"
 #include "timer.h"
 #include "objects.h"
+#include "ringbuffer.h"
 
 
 // Game setup
@@ -22,6 +23,7 @@ int accel_time_const = 300000;     // Acceleration time in uS to get to 100% spe
 // INIT Globals
 uint32_t framestart;
 uint32_t last_frametime = 0;
+uint32_t gameloop_time = 0; 
 
 void ToggleFullscreen(SDL_Window* Window) {
     Uint32 FullscreenFlag = SDL_WINDOW_FULLSCREEN;
@@ -62,6 +64,11 @@ int main(int argc, char *argv[])
     
     ship ship_1 = ship(w, h, ship_width_rel, rend, ship_files, 5, ship_animation_speed);
     bkg bg = bkg(1000, rend, w, h);
+    bool debug = true;
+    Ringbuffer frame_time = Ringbuffer(500);
+    Ringbuffer game_time = Ringbuffer(500);
+    //int frame_time[200];
+    //int game_time[200];
 
 	// animation loop
 	while (!close) {
@@ -96,13 +103,35 @@ int main(int argc, char *argv[])
         bg.draw(mov_bkg);
         ship_1.render(millis());
 
+        if(debug)
+        {
+            int div = 50;
+            int step = 10;
+            int begin = 30;
+            int end = 120;
+            int pos_x = 10;
+            SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
+            for(int y = begin; y <= end; y += step)
+                SDL_RenderDrawLine(rend, pos_x, (1/(float)y)*(1000000/div), frame_time.buffer.size(), (1/(float)y)*(1000000/div));
+            SDL_SetRenderDrawColor(rend, 0, 255, 0, 255);
+            for(int i = 0; i < (frame_time.buffer.size()-1) and frame_time.buffer.size() != 0; i++)
+                SDL_RenderDrawLine(rend, pos_x+i, frame_time.buffer.at(i)/div, pos_x+1+i, frame_time.buffer.at(i+1)/div);
+            SDL_SetRenderDrawColor(rend, 255, 0, 0, 255);
+            for(int i = 0; i < (game_time.buffer.size()-1) and game_time.buffer.size() != 0; i++)
+                SDL_RenderDrawLine(rend, pos_x+i, game_time.buffer.at(i)/div, pos_x+1+i, game_time.buffer.at(i+1)/div);
+            SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
+        }
+
 		// triggers the double buffers
 		// for multiple rendering
+        gameloop_time = micros() - framestart;
 		SDL_RenderPresent(rend);
 
 		// calculates to set fps
         last_frametime = micros() - framestart;
-        //fmt::print("Frametime: {}\n", last_frametime);
+        frame_time.add(last_frametime);
+        game_time.add(gameloop_time);
+        fmt::print("Frame Time: {} \t Gameloop Time {} \t> {}%\n", last_frametime, gameloop_time, (float)gameloop_time/(float)last_frametime);
 	}
 
 	// destroy texture
