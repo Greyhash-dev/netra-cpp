@@ -108,7 +108,7 @@ void bkg::draw(int bkg_speed)
         rect->y += bkg_speed;
         if(rect->y > h)
         {
-            rect->y = - rect->w;
+            rect->y -= h + rect->w;
             rect->x = (std::rand()%(w+rect->w*2))-rect->w;
         }
         SDL_RenderFillRect(rend, rect);
