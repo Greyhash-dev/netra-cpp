@@ -27,6 +27,8 @@ bool* EventManager::check()
                     case SDL_SCANCODE_RIGHT:
                         status[4] = (event.type == SDL_KEYDOWN);
                         break;
+                    case SDL_SCANCODE_SPACE:
+                        status[5] = (event.type == SDL_KEYDOWN);
                     default:
                         break;
                 }
