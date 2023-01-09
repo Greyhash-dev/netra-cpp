@@ -5,3 +5,4 @@
 std::array<int, 3> HSVtoRGB(float H, float S,float V);
 int getIndex(std::vector<std::string> v, std::string key);
 void get_text_and_rect(SDL_Renderer *renderer, int x, int y, const char *text, TTF_Font *font, SDL_Texture **texture, SDL_Rect *rect, std::array<Uint8, 3> rgb);
+std::array<int, 2> rotate_point(std::array<int, 2> rotatation_point, std::array<int, 2> point, float amount);

@@ -24,12 +24,25 @@ struct hitbox
 {
     std::string hitbox_type;
     hitbox_label* hitbox_ptr;
-    int hit_w;
-    int hit_h;
-    float cur_x;
-    float cur_y;
+    SDL_Rect rect;
     void draw_hitbox(SDL_Renderer* renderer, std::vector<hitbox_label>* hitbox_types, TTF_Font *font, int w, int h);
     void generate_labels(SDL_Renderer* renderer, std::vector<hitbox_label>* hitbox_labels, TTF_Font *font, int w, int h, std::string new_type);
+    std::array<float, 2> hit_rotation_point = {0, 0};
+    float rot = 0;
+};
+
+class flasche: public hitbox
+{
+    private:
+        std::string img_path;
+        SDL_Texture* tex;
+        SDL_Renderer* rend;
+    public:
+        SDL_Point rotation_point;
+        float spin;
+        flasche(std::string path, float width_rel, int screen_w, int screen_h, int spin_speed, SDL_Renderer* renderer);
+        void render(int micros);
+        ~flasche();
 };
 
 class ship: public hitbox
@@ -48,12 +61,28 @@ class ship: public hitbox
         float angle;
 
 	public:
-        SDL_Rect dest;
         ship(int screen_w, int screen_h, float ship_width_rel, SDL_Renderer* renderer, std::string files[], int arr_len, int ship_animation_speed);
         ~ship();
         void render(int millis);
         void move(float amount, int apperent_speed, float div);
         float rotate(double angle_delta, int max_rotation, float div);
+};
+
+class harald: public hitbox
+{
+    private:
+        SDL_Renderer* rend;
+        SDL_Texture* body;
+        SDL_Texture* arm;
+        float arm_rotation;
+        SDL_Point arm_rotation_point;
+        int throw_speed;
+    public:
+        flasche* flask = nullptr;
+        SDL_Rect rect_arm;
+        void render(int micros);
+        harald(int screen_w, int screen_h, float harald_width_rel, SDL_Renderer* renderer, int speed);
+        ~harald();
 };
 
 class bkg
@@ -76,8 +105,8 @@ struct bullet: public hitbox
     float cur_rotation;
     bullet(int x, int y, float v, float r){
         hitbox_type = "bullet";
-        cur_x = (float)x;
-        cur_y = (float)y;
+        rect.x = (double)x;
+        rect.y = (double)y;
         velocity = v;
         cur_rotation = r;
     }

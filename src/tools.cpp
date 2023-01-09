@@ -66,3 +66,14 @@ void get_text_and_rect(SDL_Renderer *renderer, int x, int y, const char *text, T
     rect->w = text_width;
     rect->h = text_height;
 }
+
+std::array<int, 2> rotate_point(std::array<int, 2> rotatation_point, std::array<int, 2> point, float amount)
+{
+    float px = point.at(0);
+    float py = point.at(1);
+    float ox = rotatation_point.at(0);
+    float oy = rotatation_point.at(1);
+    float x = cos(amount) * (px-ox) - sin(amount) * (py-oy) + ox;
+    float y = sin(amount) * (px-ox) + cos(amount) * (py-oy) + oy;
+    return {(int)x, (int)y};
+}

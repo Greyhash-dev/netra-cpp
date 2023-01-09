@@ -5,7 +5,7 @@ project(Netra)
 if (NOT CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_CURRENT_BINARY_DIR)
 
     # list of files for which we add a copy rule
-    set(data_SHADOW res/ship_1.png res/ship_2.png res/ship_3.png res/ship_4.png res/ship_5.png res/hack.ttf)
+    set(data_SHADOW res/ship_1.png res/ship_2.png res/ship_3.png res/ship_4.png res/ship_5.png res/hack.ttf res/harald-body.png res/harald-arm.png res/rum.png)
 
     foreach(item IN LISTS data_SHADOW)
         message(STATUS ${item})
@@ -23,6 +23,9 @@ add_custom_target(data-target-3 ALL DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/res/shi
 add_custom_target(data-target-4 ALL DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/res/ship_4.png")
 add_custom_target(data-target-5 ALL DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/res/ship_5.png")
 add_custom_target(data-target-6 ALL DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/res/hack.ttf")
+add_custom_target(data-target-7 ALL DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/res/harald-body.png")
+add_custom_target(data-target-8 ALL DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/res/harald-arm.png")
+add_custom_target(data-target-9 ALL DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/res/rum.png")
 
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
